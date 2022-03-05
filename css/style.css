@@ -1,0 +1,250 @@
+*{
+padding: 0;
+margin: 0;
+border: 0;
+}
+*,*::before,*::after{
+-moz-box-sizing: border-box;
+-webkit-box-sizing: border-box;
+box-sizing: border-box;
+}
+:focus,:active{outline: none;}
+a:focus,a:active{outline: none;}
+nav,footer,header,aside{display: block;}
+html,body{
+height: 100%;
+width: 100%;
+font-size: 100%;
+line-height: 1;
+font-size: 14px;
+-ms-text-size-adjust: 100%;
+-moz-text-size-adjust: 100%;
+-webkit-text-size-adjust: 100%;
+}
+input,button,textarea{font-family: inherit;}
+input::-ms-clear{display: none;}
+button{cursor: pointer;}
+button::-moz-focus-inner{padding: 0;border: 0;}
+a, a:visited{text-decoration: none;}
+ul li{list-style: none;}
+img{vertical-align: top;}
+h1,h2,h3,h4,h5,h6{font-size: inherit;font-weight: 400;}
+/*-------------------------------------------*/
+
+
+body{
+background: rgb(241, 195, 195);
+font-family: Roboto;
+font-style: normal;
+font-weight: normal;
+font-size: 24px;
+line-height: 28px;
+}
+
+.main_body{
+margin: 0px auto;
+width: 621px;
+height: 462px;
+background: #FFFFFF;
+border: 1px solid #FFFFFF;
+padding: 14px 9px 13px 12px;
+}
+
+form{
+width: 598px;
+height: 45px;
+border: 1px solid #000000;
+font-size: 18px;
+line-height: 21px;
+position: relative;
+}
+
+input{
+position: absolute;
+top: 0px;
+left: 0px;
+width: 540px;
+height: 43px;
+padding: 11px 1px 13px 16px;
+}
+
+button{
+position: absolute;
+top: 0px;
+right: 0px;
+width: 56px;
+height: 43px;
+background: url('/img/Shape2.svg') 50% 50% no-repeat;
+}
+
+.main_block{
+width: 598px;
+height: 388px;
+border: 1px solid #000000;
+border-top: none;
+position: relative;
+}
+
+.tabs{
+width: 297px;
+height: 388px;
+border-right: 1px solid #000000;
+}
+
+.tabs_body{
+width: 297px;
+height: 345px;
+border-bottom: 1px solid #000000;
+}
+
+.tab_block{
+display: none;
+}
+
+.tab_block:target{
+display: block;
+}
+
+.tabs_item{
+display: flex;
+color: #000000;
+}
+
+.tab_index{
+flex: 0 1 33.333%;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 42px;
+border-right: 1px solid #000000;
+text-decoration: none;
+color: #000000;
+font-size: 18px;
+line-height: 21px;
+}
+
+.active_tab{
+    background: #000000;
+    color: #FFFFFF;
+}
+
+.tab_index:nth-child(3){
+border: none;
+}
+
+.location{
+position: absolute;
+top: 0px;
+right: 0px;
+}
+
+.added{
+width: 300px;
+height: 68px;
+border-bottom: 1px solid #000000;
+padding: 33px 0 7px 18px;
+}
+
+.city_list{
+padding: 35px 18px;
+}
+
+.city{
+margin: 10px 0;
+}
+
+.tab_Now{
+position: relative;
+width: 297px;
+height: 345px;
+padding-top: 20px;
+background:url('/img/icons8-cloud-96\ 1.svg') 50% 50%/78px 59px no-repeat;
+}
+
+.gradBid{
+width: 95px;
+height: 83px;
+font-size: 70px;
+line-height: 82px;
+margin: 0 0 0 23px;
+}
+
+.tabCity_1{
+width: 76px;
+height: 28px;
+padding: 197px 0 17px 12px;
+}
+
+.position_like{
+position: absolute;
+bottom: 23px;
+right: 26px;
+width: 22px;
+height: 22px;
+cursor: pointer;
+}
+
+.tab_Details{
+padding:33px 10px 10px 15px;
+}
+
+.tabCity_2{
+margin-bottom: 42px;
+}
+
+.weather{
+margin-bottom: 10px;
+}
+
+.tab_Forecast{
+width: 297px;
+height: 345px;
+padding:33px 10px 10px 18px;
+overflow: auto; 
+-ms-overflow-style: none;
+scrollbar-width: none; 
+}
+
+.tab_Forecast::-webkit-scrollbar {
+width: 0;
+height: 0;
+}
+
+.weather_Time{
+margin-top: 9px;
+width: 265px;
+height: 120px;
+border: 1px solid #000000;
+position: relative;
+font-size: 18px;
+line-height: 21px;
+}
+
+.top_left{
+position: absolute;
+top:6px;
+left:8px;
+}
+
+.bottom_left{
+position: absolute;
+bottom: 13px;
+left:10px;
+}
+
+.top_right{
+position: absolute;
+top:6px;
+right:12px;
+}
+
+.bottom_right{
+position: absolute;
+bottom: 9px;
+right:10px;
+text-align: center;
+}
+
+.block{
+display: block;
+}
