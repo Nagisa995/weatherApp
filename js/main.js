@@ -1,17 +1,35 @@
-const tabs=document.body.querySelectorAll('a');
-for (let tab of tabs){
-    tab.addEventListener('click', setActive);
+import {
+    setAdditionalHTMLOptions,
+    clearSearchOnUI,
+    weatherNow,
+} from './html.js';
+
+import {
+    addEvent,
+} from './view.js';
+
+import {
+    lastCity,
+    serverRequest,
+    compilationURL,
+} from './server.js'
+
+setAdditionalHTMLOptions();
+defaultUI(lastCity);
+
+addEvent(searchForm,'submit',outputOnUI);
+
+function outputOnUI(event){
+    event.preventDefault();
+    const cityName = searchCity.value;
+    const serverAnswer=serverRequest(compilationURL(cityName));
+    serverAnswer.then(answer=>console.log(answer));
+    serverAnswer.then(answer=>weatherNow(answer));
+    clearSearchOnUI();
 }
 
-function setActive(event){
-    if(transitionNow.classList.contains('active_tab')){
-        transitionNow.classList.remove('active_tab')
-    }
-    else {
-        if(transitionDetails.classList.contains('active_tab')){
-            transitionDetails.classList.remove('active_tab')
-        }
-        else transitionForecast.classList.remove('active_tab')
-    }
-    event.currentTarget.classList.add('active_tab');
+function defaultUI(defaultCity){
+    const serverAnswer=serverRequest(compilationURL(defaultCity));
+    serverAnswer.then(answer=>console.log(answer));
+    serverAnswer.then(answer=>weatherNow(answer));
 }

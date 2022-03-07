@@ -14,15 +14,15 @@
 
 <body>
     <div class="main_body">
-        <form action="#" method="get">
-            <input placeholder="enter city name" type="text" value="Aktobe"><button type="submit"></button>
+        <form id="searchForm" action="#" method="get">
+            <input id="searchCity" placeholder="enter city name" type="text"><button type="submit"></button>
         </form>
         <div class="main_block">
             <div class="tabs">
                 <div class="tabs_body">
                     <div id="Now" class="tab_block tab_Now">
-                        <p class="gradBid">14&deg;</p>
-                        <p class="tabCity_1">Aktobe</p>
+                        <p id="nowTemprature" class="gradBid"></p>
+                        <p id='currentCity' class="tabCity_1"></p>
                         <img class="position_like" src="/img/Shape.svg" alt="">
                     </div>
                     <div id="Details" class="tab_block tab_Details">
@@ -125,7 +125,7 @@
             </div>
         </div>
     </div>
-    <script src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 
 </html>

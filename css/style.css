@@ -158,7 +158,7 @@ position: relative;
 width: 297px;
 height: 345px;
 padding-top: 20px;
-background:url('/img/icons8-cloud-96\ 1.svg') 50% 50%/78px 59px no-repeat;
+
 }
 
 .gradBid{
@@ -170,9 +170,9 @@ margin: 0 0 0 23px;
 }
 
 .tabCity_1{
-width: 76px;
 height: 28px;
-padding: 197px 0 17px 12px;
+padding: 197px 50px 17px 12px;
+text-transform: capitalize;
 }
 
 .position_like{
