@@ -1,12 +1,13 @@
-export const lastCity='moscow'
+import{
+    SERVER_URL,
+    API_KEY,
+} from './const.js'
 
 export function serverRequest(url) {
     return fetch(url).then(response => response.json());
 }
 
 export function compilationURL(cityName) {
-    const serverUrl = 'http://api.openweathermap.org/data/2.5/weather';
-    const apiKey = 'f660a2fb1e4bad108d6160b7f58c555f';
-    const url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
+    const url = `${SERVER_URL}?q=${cityName}&appid=${API_KEY}`;
     return url;
 }
