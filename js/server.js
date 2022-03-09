@@ -1,4 +1,4 @@
-import{
+import {
     SERVER_URL,
     API_KEY,
 } from './const.js'

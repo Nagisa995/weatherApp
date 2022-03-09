@@ -1,35 +1,41 @@
 import {
     addEvent,
     clearSearchOnUI,
-    weatherTabs,
     setActive,
+    addOnUISelectedCitiesList,
+    weatherOnUI,
 } from './view.js';
 
 import {
-    serverRequest,
-    compilationURL,
-} from './server.js'
-
-import {
-    DEFAULT_CITY,
     DEFAULT_UI_ELEMENTS,
+    SELECTED_CITIES,
 } from './const.js';
 
-defaultUI(DEFAULT_CITY);
+const DEFAULT_CITY = SELECTED_CITIES[0];
+
+SELECTED_CITIES.forEach(city => addOnUISelectedCitiesList(city))
+weatherOnUI(DEFAULT_CITY);
 
 addEvent(DEFAULT_UI_ELEMENTS.UI_FORM, 'submit', outputOnUI);
 DEFAULT_UI_ELEMENTS.UI_TRANSITION.forEach(elem => addEvent(elem, 'click', setActive));
+addEvent(DEFAULT_UI_ELEMENTS.UI_SELECTBUTTON, 'click', addOnSelectedCitiesList);
 
 function outputOnUI(event) {
     event.preventDefault();
     const cityName = searchCity.value;
-    const serverAnswer = serverRequest(compilationURL(cityName));
-    serverAnswer.then(answer => console.log(answer))
-    serverAnswer.then(answer => weatherTabs(answer)).catch(error => alert(error.message));
+    weatherOnUI(cityName);
     clearSearchOnUI();
 }
 
-function defaultUI(defaultCity) {
-    const serverAnswer = serverRequest(compilationURL(defaultCity));
-    serverAnswer.then(answer => weatherTabs(answer));
+function addOnSelectedCitiesList() {
+    try {
+        const addedCity = currentCity.textContent.toLowerCase();
+        if (SELECTED_CITIES.includes(addedCity)) {
+            throw new Error('the city is already in the list of favorites');
+        }
+        SELECTED_CITIES.push(addedCity);
+        addOnUISelectedCitiesList(addedCity);
+    } catch (error) {
+        alert(error.message);
+    }
 }
