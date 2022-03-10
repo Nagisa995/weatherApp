@@ -1,76 +1,87 @@
 import {
-    SELECTED_CITIES
+    backGroundIcon,
+    addEvent,
+    SELECTED_CITIES,
+    date,
+    temperatureDegrees,
+    changeContentOnUI,
+    isActiveNow,
+    makeInactive,
+    target,
+    setStyle,
 } from './const.js';
-
+//---------------------------------------------------------//
 import {
     serverRequest,
     compilationURL,
 } from './server.js'
-
-export function addEvent(elem, event, action) {
-    elem.addEventListener(event, action);
-}
-
+//---------------------------------------------------------//
 export function clearSearchOnUI() {
     searchCity.value = '';
 }
 
 export function weatherTabs(answer) {
-    if (answer.cod === '404') {
+    const answerIsNotValid = (answer.cod === '404');
+    if (answerIsNotValid) {
         return new Promise(function (resolve, reject) {
             reject(new Error('city not found'))
         })
     }
-    weatherNow(answer)
+    weatherNow(answer);
+    weatherDetails(answer);
 }
 
 function weatherNow(answer) {
-    nowTemprature.textContent = `${(answer.main.temp - 273.15).toFixed(1)}°`;
-    currentCity.textContent = `${answer.name}`;
+    changeContentOnUI(nowTemprature, temperatureDegrees(answer.main.temp));
+    changeContentOnUI(currentCityNow, answer.name)
     Now.style = backGroundIcon(answer["weather"][0]["icon"]);
 }
 
-function backGroundIcon(icon) {
-    return `background: url('http://openweathermap.org/img/wn/${icon}@2x.png') 50% 50%/80px 80px no-repeat`
+function weatherDetails(answer) {
+    changeContentOnUI(currentCityDetails, answer.name);
+    changeContentOnUI(detailsTemprature, temperatureDegrees(answer.main.temp));
+    changeContentOnUI(detailsFeelsLike, temperatureDegrees(answer.main.feels_like));
+    changeContentOnUI(detailsWeather, answer.weather[0].main);
+    changeContentOnUI(detailsSunrise, date(answer.sys.sunrise));
+    changeContentOnUI(detailsSunset, date(answer.sys.sunset));
 }
 
 export function setActive(event) {
-    if (transitionNow.classList.contains('active_tab')) {
-        transitionNow.classList.remove('active_tab')
+    if (isActiveNow(transitionNow)) {
+        makeInactive(transitionNow);
     }
     else {
-        if (transitionDetails.classList.contains('active_tab')) {
-            transitionDetails.classList.remove('active_tab')
+        if (isActiveNow(transitionDetails)) {
+            makeInactive(transitionDetails);
         }
-        else transitionForecast.classList.remove('active_tab')
+        else makeInactive(transitionForecast);
     }
-    event.currentTarget.classList.add('active_tab');
+    setStyle(target(event), 'active_tab');
 }
 
 export function addOnUISelectedCitiesList(city) {
     const cityElement = document.createElement('li');
-    cityElement.classList.add('city');
+    setStyle(cityElement, 'city');
     const cityName = document.createElement('span');
-    cityName.textContent = `${city}`;
-    cityName.addEventListener('click', selectedCityOnUI);
+    changeContentOnUI(cityName, city);
+    addEvent(cityName, 'click', selectedCityOnUI);
     const removeIcon = document.createElement('img');
-    removeIcon.classList.add('delete');
+    setStyle(removeIcon, 'delete');
     removeIcon.src = './img/delete_icon.svg';
-    removeIcon.addEventListener('click', removeCityOnUIfromSelectedList);
-    cityElement.append(cityName);
-    cityElement.append(removeIcon);
+    addEvent(removeIcon, 'click', removeCityOnUIfromSelectedList);
+    cityElement.append(cityName, removeIcon);
     selectedCitiesList.append(cityElement);
 }
 
 function removeCityOnUIfromSelectedList(event) {
-    const deletedCityName = event.currentTarget.previousSibling.textContent;
+    const deletedCityName = target(event).previousSibling.textContent;
     SELECTED_CITIES.splice((SELECTED_CITIES.indexOf(deletedCityName)), 1);
-    const deletedCity = event.currentTarget.parentElement;
-    deletedCity.remove();
+    const deletedCityOnUI = target(event).parentElement;
+    deletedCityOnUI.remove();
 }
 
 function selectedCityOnUI(event) {
-    const selectedCity = event.currentTarget.textContent;
+    const selectedCity = target(event).textContent;
     weatherOnUI(selectedCity)
 }
 

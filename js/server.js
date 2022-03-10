@@ -2,7 +2,7 @@ import {
     SERVER_URL,
     API_KEY,
 } from './const.js'
-
+//---------------------------------------------------------//
 export function serverRequest(url) {
     return fetch(url).then(response => response.json());
 }

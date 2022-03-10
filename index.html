@@ -21,18 +21,18 @@
             <div class="tabs">
                 <div class="tabs_body">
                     <div id="Now" class="tab_block tab_Now">
-                        <p id="nowTemprature" class="gradBid"></p>
-                        <p id='currentCity' class="tabCity_1"></p>
+                        <p class="gradBid"><span id="nowTemprature"></span>°</p>
+                        <p id='currentCityNow' class="tabCity_1"></p>
                         <img id="selectIcon" class="position_like" src="/img/Shape.svg" alt="">
                     </div>
                     <div id="Details" class="tab_block tab_Details">
-                        <p class="tabCity_2">Aktobe</p>
+                        <p id='currentCityDetails' class="tabCity_2"></p>
                         <ul>
-                            <li class="weather">Temperature: 14&deg;</li>
-                            <li class="weather">Feels like: 10&deg;</li>
-                            <li class="weather">Weather: Clouds</li>
-                            <li class="weather">Sunrise: 03:21</li>
-                            <li class="weather">Sunset: 18:54</li>
+                            <li class="weather">Temprature: <span id="detailsTemprature">°</span></li>
+                            <li class="weather">Feels like: <span id="detailsFeelsLike"></span>°</li>
+                            <li class="weather">Weather: <span id="detailsWeather"></span></li>
+                            <li class="weather">Sunrise: <span id="detailsSunrise"></span></li>
+                            <li class="weather">Sunset: <span id="detailsSunset"></span></li>
                         </ul>
                     </div>
                     <div id="Forecast" class="tab_block tab_Forecast">
