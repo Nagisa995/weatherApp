@@ -30,9 +30,11 @@ function outputOnUI(event) {
 function addOnSelectedCitiesList() {
     try {
         const addedCity = currentCityNow.textContent.toLowerCase();
+
         if (SELECTED_CITIES.includes(addedCity)) {
             throw new Error('the city is already in the list of favorites');
         }
+
         SELECTED_CITIES.push(addedCity);
         addOnUISelectedCitiesList(addedCity);
     } catch (error) {
