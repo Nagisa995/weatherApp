@@ -260,6 +260,10 @@ right:10px;
 text-align: center;
 }
 
+.bottom_right>img{
+width: 40px;
+}
+
 .block{
 display: block;
 }
