@@ -1,24 +1,31 @@
 import {
     backGroundIcon,
     addEvent,
-    SELECTED_CITIES,
     dateFromString,
     time,
     temperatureDegrees,
-    changeContentOnUI,
+    changeElementContentOnUI,
     isActiveNow,
     makeInactive,
     target,
     setStyle,
-    deleteIcon,
     weatherIconURL,
-} from './const.js';
+} from './utilities.js';
 //---------------------------------------------------------//
 import {
     serverRequest,
     compilationURLCurrentWeather,
     compilationURLForecast,
 } from './server.js'
+//---------------------------------------------------------//
+import {
+    deleteIcon,
+} from './const.js'
+//---------------------------------------------------------//
+import {
+    addCurrentCityInStorage,
+    removeCityInSelectedList,
+} from './storage.js'
 //---------------------------------------------------------//
 export function clearSearchOnUI() {
     searchCity.value = '';
@@ -56,21 +63,23 @@ function weatherTabs(answer) {
     weatherNow(answer);
     weatherDetails(answer);
     weatherForecast(answer);
+
+    addCurrentCityInStorage(answer.name);
 }
 
 function weatherNow(answer) {
-    changeContentOnUI(nowTemprature, temperatureDegrees(answer.main.temp));
-    changeContentOnUI(currentCityNow, answer.name);
+    changeElementContentOnUI(nowTemprature, temperatureDegrees(answer.main.temp));
+    changeElementContentOnUI(currentCityNow, answer.name);
     Now.style = backGroundIcon(answer["weather"][0]["icon"]);
 }
 
 function weatherDetails(answer) {
-    changeContentOnUI(currentCityDetails, answer.name);
-    changeContentOnUI(detailsTemprature, temperatureDegrees(answer.main.temp));
-    changeContentOnUI(detailsFeelsLike, temperatureDegrees(answer.main.feels_like));
-    changeContentOnUI(detailsWeather, answer.weather[0].main);
-    changeContentOnUI(detailsSunrise, time(answer.sys.sunrise));
-    changeContentOnUI(detailsSunset, time(answer.sys.sunset));
+    changeElementContentOnUI(currentCityDetails, answer.name);
+    changeElementContentOnUI(detailsTemprature, temperatureDegrees(answer.main.temp));
+    changeElementContentOnUI(detailsFeelsLike, temperatureDegrees(answer.main.feels_like));
+    changeElementContentOnUI(detailsWeather, answer.weather[0].main);
+    changeElementContentOnUI(detailsSunrise, time(answer.sys.sunrise));
+    changeElementContentOnUI(detailsSunset, time(answer.sys.sunset));
 }
 
 function weatherForecast(answer) {
@@ -81,13 +90,10 @@ function weatherForecast(answer) {
 
 function forecastOnUi(answer) {
     if (forecastList.hasChildNodes()) {
-        forecastList.remove();
-        const list = document.createElement('ul');
-        list.id = 'forecastList';
-        Forecast.append(list);
+        forecastList.innerHTML='';
     }
 
-    changeContentOnUI(currentCityForecast, answer.city.name);
+    changeElementContentOnUI(currentCityForecast, answer.city.name);
 
     for (let element of answer.list) {
         forecastElementOnUI(element);
@@ -102,7 +108,7 @@ function forecastElementOnUI(element) {
 
             const topLeftElement = document.createElement('div');
             setStyle(topLeftElement, 'top_left');
-            changeContentOnUI(topLeftElement, dateFromString(element.dt_txt));
+            changeElementContentOnUI(topLeftElement, dateFromString(element.dt_txt));
 
             const bottomLeftElement = document.createElement('div');
             setStyle(bottomLeftElement, 'bottom_left');
@@ -110,10 +116,10 @@ function forecastElementOnUI(element) {
                 const bottomLeftList = document.createElement('ul');
                     
                     const firstBottomLeftListElement = document.createElement('li');
-                    changeContentOnUI(firstBottomLeftListElement, `Temperature: ${temperatureDegrees(element.main.temp)}°`);
+                    changeElementContentOnUI(firstBottomLeftListElement, `Temperature: ${temperatureDegrees(element.main.temp)}°`);
                     
                     const secondBottomLeftListElement = document.createElement('li');
-                    changeContentOnUI(secondBottomLeftListElement, `Feels like: ${temperatureDegrees(element.main.feels_like)}°`);
+                    changeElementContentOnUI(secondBottomLeftListElement, `Feels like: ${temperatureDegrees(element.main.feels_like)}°`);
                 
                 bottomLeftList.append(firstBottomLeftListElement, secondBottomLeftListElement);
             
@@ -121,14 +127,14 @@ function forecastElementOnUI(element) {
 
             const topRightElement = document.createElement('div');
             setStyle(topRightElement, 'top_right');
-            changeContentOnUI(topRightElement, `${time(element.dt)}0`);
+            changeElementContentOnUI(topRightElement, `${time(element.dt)}0`);
 
             const bottomRightElement = document.createElement('div');
             setStyle(bottomRightElement, 'bottom_right');
 
                 const weatherBottomRightElement = document.createElement('span');
                 setStyle(weatherBottomRightElement, 'block');
-                changeContentOnUI(weatherBottomRightElement, `${element.weather[0].main}`);
+                changeElementContentOnUI(weatherBottomRightElement, `${element.weather[0].main}`);
 
                 const imageBottomRightElement = document.createElement('img');
                 imageBottomRightElement.src = weatherIconURL(element.weather[0].icon);
@@ -146,7 +152,7 @@ export function addOnUISelectedCitiesList(city) {
     setStyle(cityElement, 'city');
 
         const cityName = document.createElement('span');
-        changeContentOnUI(cityName, city);
+        changeElementContentOnUI(cityName, city);
         addEvent(cityName, 'click', selectedCityOnUI);
 
         const removeIcon = document.createElement('img');
@@ -160,7 +166,7 @@ export function addOnUISelectedCitiesList(city) {
 
 function removeCityOnUIfromSelectedList(event) {
     const deletedCityName = target(event).previousSibling.textContent;
-    SELECTED_CITIES.splice((SELECTED_CITIES.indexOf(deletedCityName)), 1);
+    removeCityInSelectedList(deletedCityName);
     
     const deletedCityOnUI = target(event).parentElement;
     deletedCityOnUI.remove();

@@ -6,15 +6,27 @@ import {
 } from './view.js';
 //---------------------------------------------------------//
 import {
-    addEvent,
     DEFAULT_UI_ELEMENTS,
-    SELECTED_CITIES,
+    DEFAULT_CITY,
 } from './const.js';
 //---------------------------------------------------------//
-const DEFAULT_CITY = SELECTED_CITIES[0];
+import {
+    addEvent,
+} from './utilities.js';
+//---------------------------------------------------------//
+import {
+    getCurrentCityFromStorage,
+    pushCityInSelectedList,
+    getSelectedListFromStorage
+} from './storage.js';
+//---------------------------------------------------------//
+const currentCity = getCurrentCityFromStorage() || DEFAULT_CITY;
+const selectedCitiesListIsValid = getSelectedListFromStorage();
 
-SELECTED_CITIES.forEach(city => addOnUISelectedCitiesList(city))
-weatherOnUI(DEFAULT_CITY);
+if (selectedCitiesListIsValid) {
+    getSelectedListFromStorage().forEach(city => addOnUISelectedCitiesList(city));
+}
+weatherOnUI(currentCity);
 
 addEvent(DEFAULT_UI_ELEMENTS.UI_FORM, 'submit', outputOnUI);
 DEFAULT_UI_ELEMENTS.UI_TRANSITION.forEach(element => addEvent(element, 'click', setActive));
@@ -31,12 +43,14 @@ function addOnSelectedCitiesList() {
     try {
         const addedCity = currentCityNow.textContent.toLowerCase();
 
-        if (SELECTED_CITIES.includes(addedCity)) {
+        if (getSelectedListFromStorage() && 
+            getSelectedListFromStorage().includes(addedCity)) {
             throw new Error('the city is already in the list of favorites');
         }
 
-        SELECTED_CITIES.push(addedCity);
         addOnUISelectedCitiesList(addedCity);
+        
+        pushCityInSelectedList(addedCity);
     } catch (error) {
         alert(error.message);
     }
