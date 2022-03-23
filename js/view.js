@@ -45,19 +45,21 @@ export function setActive(event) {
     setStyle(target(event), 'active_tab');
 }
 
-export function weatherOnUI(city) {
-    const serverAnswer = serverRequest(compilationURLCurrentWeather(city));
-
-    serverAnswer.then(answer => weatherTabs(answer)).catch(alert);
+export async function weatherOnUI(city) {
+    try{
+        const serverAnswer = await serverRequest(compilationURLCurrentWeather(city));
+        
+        await weatherTabs(serverAnswer);
+    }catch(error){
+        alert(error.message);
+    }    
 }
 
-function weatherTabs(answer) {
+async function weatherTabs(answer) {
     const answerIsNotValid = (answer.cod === '404');
 
     if (answerIsNotValid) {
-        return new Promise(function (resolve, reject) {
-            reject(new Error('city not found'))
-        });
+        throw new Error('city not found');
     }
 
     weatherNow(answer);
@@ -82,15 +84,17 @@ function weatherDetails(answer) {
     changeElementContentOnUI(detailsSunset, time(answer.sys.sunset));
 }
 
-function weatherForecast(answer) {
-    const serverAnswerForecast = serverRequest(compilationURLForecast(answer));
+async function weatherForecast(answer) {
+    const serverAnswerForecast = await serverRequest(compilationURLForecast(answer));
 
-    serverAnswerForecast.then(answerForecast => forecastOnUi(answerForecast));
+    await forecastOnUi(serverAnswerForecast);
 }
 
 function forecastOnUi(answer) {
-    if (forecastList.hasChildNodes()) {
-        forecastList.innerHTML='';
+    const forecastIsNotEmpty = forecastList.hasChildNodes();
+
+    if (forecastIsNotEmpty) {
+        forecastList.innerHTML = '';
     }
 
     changeElementContentOnUI(currentCityForecast, answer.city.name);
@@ -174,5 +178,5 @@ function removeCityOnUIfromSelectedList(event) {
 
 function selectedCityOnUI(event) {
     const selectedCity = target(event).textContent;
-    weatherOnUI(selectedCity)
+    weatherOnUI(selectedCity);
 }

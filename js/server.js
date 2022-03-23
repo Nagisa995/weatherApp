@@ -3,8 +3,10 @@ import {
     API_KEY,
 } from './const.js'
 //---------------------------------------------------------//
-export function serverRequest(url) {
-    return fetch(url).then(response => response.json());
+export async function serverRequest(url) {
+    const serverRequest = await fetch(url);
+    const serverAnswer = await serverRequest.json();
+    return serverAnswer;
 }
 
 export function compilationURLCurrentWeather(cityName) {
