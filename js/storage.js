@@ -7,17 +7,23 @@ export function getCurrentCityFromStorage() {
 }
 
 export function pushCityInSelectedList(city) {
-    const SELECTED_LIST = getSelectedListFromStorage() || [];
-    SELECTED_LIST.push(city);
-    localStorage.setItem('selectedList', JSON.stringify(SELECTED_LIST));
+    const SELECTED_LIST = getSelectedListFromStorage();
+    SELECTED_LIST.add(city);
+    localStorage.setItem('selectedList', JSON.stringify([...SELECTED_LIST]));
 }
 
 export function removeCityInSelectedList(city) {
     const SELECTED_LIST = getSelectedListFromStorage();
-    SELECTED_LIST.splice((SELECTED_LIST.indexOf(city)), 1);
-    localStorage.setItem('selectedList', JSON.stringify(SELECTED_LIST));
+    SELECTED_LIST.delete(city);
+    localStorage.setItem('selectedList', JSON.stringify([...SELECTED_LIST]));
 }
 
-export function getSelectedListFromStorage(){
-    return JSON.parse(localStorage.getItem('selectedList'));
+export function getSelectedListFromStorage() {
+    const selectedListIsEmpty = localStorage.getItem('selectedList') === 'undefined';
+
+    if (selectedListIsEmpty) {
+        return new Set();
+    } else {
+        return new Set(JSON.parse(localStorage.getItem('selectedList')));
+    }
 }

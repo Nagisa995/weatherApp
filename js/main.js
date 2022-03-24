@@ -21,11 +21,12 @@ import {
 } from './storage.js';
 //---------------------------------------------------------//
 const currentCity = getCurrentCityFromStorage() || DEFAULT_CITY;
-const selectedCitiesListIsValid = getSelectedListFromStorage();
+const selectedList = getSelectedListFromStorage().values();
 
-if (selectedCitiesListIsValid) {
-    getSelectedListFromStorage().forEach(city => addOnUISelectedCitiesList(city));
+for (let city of selectedList) {
+    addOnUISelectedCitiesList(city);
 }
+
 weatherOnUI(currentCity);
 
 addEvent(DEFAULT_UI_ELEMENTS.UI_FORM, 'submit', outputOnUI);
@@ -42,15 +43,15 @@ function outputOnUI(event) {
 function addOnSelectedCitiesList() {
     try {
         const addedCity = currentCityNow.textContent.toLowerCase();
+        const addedCityNotInList = !getSelectedListFromStorage().has(addedCity);
 
-        if (getSelectedListFromStorage() && 
-            getSelectedListFromStorage().includes(addedCity)) {
-            throw new Error('the city is already in the list of favorites');
+        if (addedCityNotInList) {
+            addOnUISelectedCitiesList(addedCity);
+            pushCityInSelectedList(addedCity);
+        } else {
+            throw new Error('City is already in the list of favorites!');
         }
-
-        addOnUISelectedCitiesList(addedCity);
         
-        pushCityInSelectedList(addedCity);
     } catch (error) {
         alert(error.message);
     }
