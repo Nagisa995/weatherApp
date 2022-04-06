@@ -1,182 +1,180 @@
 import {
-    backGroundIcon,
-    addEvent,
-    dateFromString,
-    time,
-    temperatureDegrees,
-    changeElementContentOnUI,
-    isActiveNow,
-    makeInactive,
-    target,
-    setStyle,
-    weatherIconURL,
-} from './utilities.js';
-//---------------------------------------------------------//
+  backGroundIcon,
+  addEvent,
+  dateFromString,
+  time,
+  temperatureDegrees,
+  changeElementContentOnUI,
+  isActiveNow,
+  makeInactive,
+  target,
+  setStyle,
+  weatherIconURL
+} from './utilities.js'
+
 import {
-    serverRequest,
-    compilationURLCurrentWeather,
-    compilationURLForecast,
+  serverRequest,
+  compilationURLCurrentWeather,
+  compilationURLForecast
 } from './server.js'
-//---------------------------------------------------------//
+
 import {
-    deleteIcon,
+  deleteIcon
 } from './const.js'
-//---------------------------------------------------------//
+
 import {
-    addCurrentCityInStorage,
-    removeCityInSelectedList,
+  addCurrentCityInStorage,
+  removeCityInSelectedList
 } from './storage.js'
-//---------------------------------------------------------//
-export function clearSearchOnUI() {
-    searchCity.value = '';
+
+export function clearSearchOnUI () {
+  searchCity.value = ''
 }
 
-export function setActive(event) {
-    if (isActiveNow(transitionNow)) {
-        makeInactive(transitionNow);
-    }
-    else {
-        if (isActiveNow(transitionDetails)) {
-            makeInactive(transitionDetails);
-        }
-        else makeInactive(transitionForecast);
-    }
+export function setActive (event) {
+  if (isActiveNow(transitionNow)) {
+    makeInactive(transitionNow)
+  } else {
+    if (isActiveNow(transitionDetails)) {
+      makeInactive(transitionDetails)
+    } else makeInactive(transitionForecast)
+  }
 
-    setStyle(target(event), 'active_tab');
+  setStyle(target(event), 'active_tab')
 }
 
-export async function weatherOnUI(city) {
-    try{
-        const serverAnswer = await serverRequest(compilationURLCurrentWeather(city));
-        
-        await weatherTabs(serverAnswer);
-    }catch(error){
-        alert(error.message);
-    }    
+export async function weatherOnUI (city) {
+  try {
+    const serverAnswer = await serverRequest(compilationURLCurrentWeather(city))
+
+    await weatherTabs(serverAnswer)
+  } catch (error) {
+    alert(error.message)
+  }
 }
 
-async function weatherTabs(answer) {
-    const answerIsNotValid = (answer.cod === '404');
+async function weatherTabs (answer) {
+  const answerIsNotValid = (answer.cod === '404')
 
-    if (answerIsNotValid) {
-        throw new Error('city not found');
-    }
+  if (answerIsNotValid) {
+    throw new Error('city not found')
+  }
 
-    weatherNow(answer);
-    weatherDetails(answer);
-    weatherForecast(answer);
+  weatherNow(answer)
+  weatherDetails(answer)
+  weatherForecast(answer)
 
-    addCurrentCityInStorage(answer.name);
+  addCurrentCityInStorage(answer.name)
 }
 
-function weatherNow(answer) {
-    changeElementContentOnUI(nowTemprature, temperatureDegrees(answer.main.temp));
-    changeElementContentOnUI(currentCityNow, answer.name);
-    Now.style = backGroundIcon(answer["weather"][0]["icon"]);
+function weatherNow (answer) {
+  changeElementContentOnUI(nowTemprature, temperatureDegrees(answer.main.temp))
+  changeElementContentOnUI(currentCityNow, answer.name)
+  Now.style = backGroundIcon(answer.weather[0].icon)
 }
 
-function weatherDetails(answer) {
-    changeElementContentOnUI(currentCityDetails, answer.name);
-    changeElementContentOnUI(detailsTemprature, temperatureDegrees(answer.main.temp));
-    changeElementContentOnUI(detailsFeelsLike, temperatureDegrees(answer.main.feels_like));
-    changeElementContentOnUI(detailsWeather, answer.weather[0].main);
-    changeElementContentOnUI(detailsSunrise, time(answer.sys.sunrise));
-    changeElementContentOnUI(detailsSunset, time(answer.sys.sunset));
+function weatherDetails (answer) {
+  changeElementContentOnUI(currentCityDetails, answer.name)
+  changeElementContentOnUI(detailsTemprature, temperatureDegrees(answer.main.temp))
+  changeElementContentOnUI(detailsFeelsLike, temperatureDegrees(answer.main.feels_like))
+  changeElementContentOnUI(detailsWeather, answer.weather[0].main)
+  changeElementContentOnUI(detailsSunrise, time(answer.sys.sunrise))
+  changeElementContentOnUI(detailsSunset, time(answer.sys.sunset))
 }
 
-async function weatherForecast(answer) {
-    const serverAnswerForecast = await serverRequest(compilationURLForecast(answer));
+async function weatherForecast (answer) {
+  const serverAnswerForecast = await serverRequest(compilationURLForecast(answer))
 
-    await forecastOnUi(serverAnswerForecast);
+  await forecastOnUi(serverAnswerForecast)
 }
 
-function forecastOnUi(answer) {
-    const forecastIsNotEmpty = forecastList.hasChildNodes();
+function forecastOnUi (answer) {
+  const forecastIsNotEmpty = forecastList.hasChildNodes()
 
-    if (forecastIsNotEmpty) {
-        forecastList.innerHTML = '';
-    }
+  if (forecastIsNotEmpty) {
+    forecastList.innerHTML = ''
+  }
 
-    changeElementContentOnUI(currentCityForecast, answer.city.name);
+  changeElementContentOnUI(currentCityForecast, answer.city.name)
 
-    for (let element of answer.list) {
-        forecastElementOnUI(element);
-    }
+  for (const element of answer.list) {
+    forecastElementOnUI(element)
+  }
 }
 
-function forecastElementOnUI(element) {
-    const forecastListElement = document.createElement('li');
+function forecastElementOnUI (element) {
+  const forecastListElement = document.createElement('li')
 
-        const elementBody = document.createElement('div');
-        setStyle(elementBody, 'weather_Time');
+  const elementBody = document.createElement('div')
+  setStyle(elementBody, 'weather_Time')
 
-            const topLeftElement = document.createElement('div');
-            setStyle(topLeftElement, 'top_left');
-            changeElementContentOnUI(topLeftElement, dateFromString(element.dt_txt));
+  const topLeftElement = document.createElement('div')
+  setStyle(topLeftElement, 'top_left')
+  changeElementContentOnUI(topLeftElement, dateFromString(element.dt_txt))
 
-            const bottomLeftElement = document.createElement('div');
-            setStyle(bottomLeftElement, 'bottom_left');
+  const bottomLeftElement = document.createElement('div')
+  setStyle(bottomLeftElement, 'bottom_left')
 
-                const bottomLeftList = document.createElement('ul');
-                    
-                    const firstBottomLeftListElement = document.createElement('li');
-                    changeElementContentOnUI(firstBottomLeftListElement, `Temperature: ${temperatureDegrees(element.main.temp)}°`);
-                    
-                    const secondBottomLeftListElement = document.createElement('li');
-                    changeElementContentOnUI(secondBottomLeftListElement, `Feels like: ${temperatureDegrees(element.main.feels_like)}°`);
-                
-                bottomLeftList.append(firstBottomLeftListElement, secondBottomLeftListElement);
-            
-            bottomLeftElement.append(bottomLeftList);
+  const bottomLeftList = document.createElement('ul')
 
-            const topRightElement = document.createElement('div');
-            setStyle(topRightElement, 'top_right');
-            changeElementContentOnUI(topRightElement, `${time(element.dt)}0`);
+  const firstBottomLeftListElement = document.createElement('li')
+  changeElementContentOnUI(firstBottomLeftListElement, `Temperature: ${temperatureDegrees(element.main.temp)}°`)
 
-            const bottomRightElement = document.createElement('div');
-            setStyle(bottomRightElement, 'bottom_right');
+  const secondBottomLeftListElement = document.createElement('li')
+  changeElementContentOnUI(secondBottomLeftListElement, `Feels like: ${temperatureDegrees(element.main.feels_like)}°`)
 
-                const weatherBottomRightElement = document.createElement('span');
-                setStyle(weatherBottomRightElement, 'block');
-                changeElementContentOnUI(weatherBottomRightElement, `${element.weather[0].main}`);
+  bottomLeftList.append(firstBottomLeftListElement, secondBottomLeftListElement)
 
-                const imageBottomRightElement = document.createElement('img');
-                imageBottomRightElement.src = weatherIconURL(element.weather[0].icon);
+  bottomLeftElement.append(bottomLeftList)
 
-            bottomRightElement.append(weatherBottomRightElement, imageBottomRightElement);
+  const topRightElement = document.createElement('div')
+  setStyle(topRightElement, 'top_right')
+  changeElementContentOnUI(topRightElement, `${time(element.dt)}0`)
 
-        elementBody.append(topLeftElement, bottomLeftElement, topRightElement, bottomRightElement);
-    
-    forecastListElement.append(elementBody);
-    forecastList.append(forecastListElement);
+  const bottomRightElement = document.createElement('div')
+  setStyle(bottomRightElement, 'bottom_right')
+
+  const weatherBottomRightElement = document.createElement('span')
+  setStyle(weatherBottomRightElement, 'block')
+  changeElementContentOnUI(weatherBottomRightElement, `${element.weather[0].main}`)
+
+  const imageBottomRightElement = document.createElement('img')
+  imageBottomRightElement.src = weatherIconURL(element.weather[0].icon)
+
+  bottomRightElement.append(weatherBottomRightElement, imageBottomRightElement)
+
+  elementBody.append(topLeftElement, bottomLeftElement, topRightElement, bottomRightElement)
+
+  forecastListElement.append(elementBody)
+  forecastList.append(forecastListElement)
 }
 
-export function addOnUISelectedCitiesList(city) {
-    const cityElement = document.createElement('li');
-    setStyle(cityElement, 'city');
+export function addOnUISelectedCitiesList (city) {
+  const cityElement = document.createElement('li')
+  setStyle(cityElement, 'city')
 
-        const cityName = document.createElement('span');
-        changeElementContentOnUI(cityName, city);
-        addEvent(cityName, 'click', selectedCityOnUI);
+  const cityName = document.createElement('span')
+  changeElementContentOnUI(cityName, city)
+  addEvent(cityName, 'click', selectedCityOnUI)
 
-        const removeIcon = document.createElement('img');
-        setStyle(removeIcon, 'delete');
-        removeIcon.src = deleteIcon;
-        addEvent(removeIcon, 'click', removeCityOnUIfromSelectedList);
+  const removeIcon = document.createElement('img')
+  setStyle(removeIcon, 'delete')
+  removeIcon.src = deleteIcon
+  addEvent(removeIcon, 'click', removeCityOnUIfromSelectedList)
 
-    cityElement.append(cityName, removeIcon);
-    selectedCitiesList.append(cityElement);
+  cityElement.append(cityName, removeIcon)
+  selectedCitiesList.append(cityElement)
 }
 
-function removeCityOnUIfromSelectedList(event) {
-    const deletedCityName = target(event).previousSibling.textContent;
-    removeCityInSelectedList(deletedCityName);
-    
-    const deletedCityOnUI = target(event).parentElement;
-    deletedCityOnUI.remove();
+function removeCityOnUIfromSelectedList (event) {
+  const deletedCityName = target(event).previousSibling.textContent
+  removeCityInSelectedList(deletedCityName)
+
+  const deletedCityOnUI = target(event).parentElement
+  deletedCityOnUI.remove()
 }
 
-function selectedCityOnUI(event) {
-    const selectedCity = target(event).textContent;
-    weatherOnUI(selectedCity);
+function selectedCityOnUI (event) {
+  const selectedCity = target(event).textContent
+  weatherOnUI(selectedCity)
 }
