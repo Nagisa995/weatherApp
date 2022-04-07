@@ -1,12 +1,11 @@
 import Cookies from 'js-cookie'
 
 export function addCurrentCityInStorage (city) {
-  Cookies.set('cookieCity', city)
+  Cookies.set('cookieCity', city, {expires:(30/86400)});
 }
 
 export function getCurrentCityFromStorage () {
-  console.log(Cookies.get('cookieCity'))
-  return Cookies.get('cookieCity')
+  return Cookies.get('cookieCity');
 }
 
 export function pushCityInSelectedList (city) {
